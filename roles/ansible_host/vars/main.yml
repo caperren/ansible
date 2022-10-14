@@ -1,0 +1,2 @@
+ansible_user_id_ed25519: "{{ ansible_user_id_ed25519 }}"
+ansible_user_id_ed25519_pub: "{{ ansible_user_id_ed25519_pub }}"

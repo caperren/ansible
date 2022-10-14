@@ -1,0 +1,5 @@
+- name: Add ansible user account
+  ansible.builtin.user:
+    name: ansible
+    comment: ansible
+    state: present
