@@ -1,0 +1,120 @@
+- name: Install and update ansible pre-requisites
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - virtualenv
+      - python3-setuptools
+    state: latest
+    update_cache: yes
+
+- name: Add ansible group
+  become: true
+  ansible.builtin.group:
+    name: "{{ ansible_group }}"
+    state: present
+
+- name: Add ansible user account
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_username }}"
+    append: true
+    groups: "sudo, {{ ansible_group }}"
+    createhome: true
+    state: present
+
+- name: Add personal account to ansible group
+  become: true
+  ansible.builtin.user:
+    name: "{{ personal_account_username }}"
+    append: true
+    groups: "{{ ansible_group }}"
+
+- name: Reset ssh connection to allow account to get group changes
+  ansible.builtin.meta: reset_connection
+
+- name: Allow ansible account to have passwordless sudo
+  become: true
+  ansible.builtin.lineinfile:
+    dest: "/etc/sudoers.d/10-{{ ansible_group }}"
+    create: true
+    state: present
+    regexp: '^%ansible'
+    line: '%ansible ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: Make sure ansible .ssh directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansible_ssh_directory }}"
+    state: directory
+    owner: "{{ ansible_username }}"
+    group: "{{ ansible_username }}"
+    mode: 0700
+
+- name: Deploy keyfiles for ansible account
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ ansible_ssh_directory }}"
+    decrypt: yes
+    owner: "{{ ansible_username }}"
+    group: "{{ ansible_username }}"
+    mode: 0600
+    backup: no
+  with_fileglob: "{{ ansible_keyfile_name }}*"
+
+- name: Get contents of ansible ssh public key file
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ ansible_ssh_directory }}/{{ ansible_keyfile_name }}.pub"
+  register: public_key
+
+- name: Set up authorized keys for localhost ssh with ansible account keyfile
+  become: true
+  ansible.posix.authorized_key:
+    user: "{{ ansible_username }}"
+    key: "{{ public_key['content'] | b64decode }}"
+
+- name: Add additions to ansible and personal account bashrc files
+  become: true
+  ansible.builtin.blockinfile:
+    block: "{{ lookup('ansible.builtin.template', 'bashrc_additions') }}"
+    path: "/home/{{ item }}/.bashrc"
+  loop:
+    - "{{ ansible_username }}"
+    - "{{ personal_account_username }}"
+
+- name: Create repo directory and update permissions
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ ansible_repo_directory }}"
+    owner: "{{ ansible_username }}"
+    group: "{{ ansible_group }}"
+    recurse: true
+    mode: 0770
+
+- name: Clone the ansible repo
+  become: true
+  become_user: ansible
+  ansible.builtin.git:
+    repo: "{{ ansible_git_repo }}"
+    dest: "{{ ansible_repo_directory }}"
+    version: "{{ ansible_repo_branch }}"
+    key_file: "/{{ ansible_username }}/.ssh/{{ ansible_keyfile_name }}"
+    accept_newhostkey: true
+    clone: true
+    update: true
+    force: true
+
+- name: Create or update ansible virtual environment
+  become: true
+  become_user: ansible
+  ansible.builtin.pip:
+    state: latest
+    requirements: "{{ ansible_repo_directory }}/requirements.txt"
+    virtualenv: "{{ ansible_venv_directory }}"
+    virtualenv_python: python3
+

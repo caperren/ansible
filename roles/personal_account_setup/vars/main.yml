@@ -1,0 +1,2 @@
+personal_ssh_directory: "/home/{{ personal_account_username }}/.ssh"
+personal_keyfile_name: id_ed25519

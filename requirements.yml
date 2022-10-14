@@ -1,0 +1,8 @@
+# Galaxy installable requirements for ansible
+
+roles:
+  - name: caddy-ansible
+    src: https://github.com/caddy-ansible/caddy-ansible.git
+
+collections:
+  - name: containers.podman

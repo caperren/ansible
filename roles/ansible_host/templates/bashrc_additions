@@ -1,0 +1,3 @@
+# Additions for ansible usage
+export EDITOR=nano
+export VAULT_PASSWORD="{{ ansible_vault_password }}"

@@ -1,0 +1,19 @@
+# I use fedora and install the following plugins:
+# cockpit-dashboard, cockpit-machines, cockpit-podman,
+# cockpit-selinux, cockpit-storaged and cockpit-system.
+# I really like cockpit for setting up storage and running
+# virtual machines and podman containers.
+- name: Install and update cockpit packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - cockpit
+      - cockpit-podman
+      - cockpit-machines
+#      - cockpit-dashboard
+#      - cockpit-system
+      - cockpit-storaged
+      - cockpit-networkmanager
+      - cockpit-pcp
+    state: latest
+    update_cache: yes

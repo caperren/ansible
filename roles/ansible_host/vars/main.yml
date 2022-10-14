@@ -1,0 +1,10 @@
+ansible_username: ansible
+ansible_vault_password: "{{ vault_ansible_vault_password }}"
+ansible_group: ansible-host
+ansible_ssh_directory: "/home/{{ ansible_username }}/.ssh"
+ansible_keyfile_name: id_ed25519
+
+ansible_git_repo: "git@github.com:caperren/ansible.git"
+ansible_repo_directory: /opt/ansible
+ansible_venv_directory: "{{ ansible_repo_directory}}/venv"
+ansible_repo_branch: initial_ansible_setup
