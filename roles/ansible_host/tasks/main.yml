@@ -66,6 +66,7 @@
     user: ansible
     key: "{{ public_key['content'] | b64decode }}"
 
+# clone start Make the section from here to end all part of clone
 - name: Delete the ansible repo directory if is exists
   become: true
   ansible.builtin.file:
@@ -92,6 +93,7 @@
     accept_newhostkey: true
     clone: true
     depth: 1
+# clone end
 
 - name: Create ansible virtual environment
   become: true
