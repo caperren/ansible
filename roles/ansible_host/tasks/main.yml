@@ -88,6 +88,7 @@
     version: "{{ ansible_repo_branch }}"
     key_file: "/{{ ansible_user_id }}/.ssh/id_ed25519"
     accept_newhostkey: true
+    clone: true
     depth: 1
 
 - name: Create ansible virtual environment
