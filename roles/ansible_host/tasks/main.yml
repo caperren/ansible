@@ -1,6 +1,44 @@
 - name: Add ansible user account
+  become: true
   ansible.builtin.user:
     name: ansible
-    comment: ansible
+    append: true
+    groups: sudo
+    createhome: true
     state: present
+
+- name: Allow ansible account to have passwordless sudo
   become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers.d/10-caperren-home-ansible
+    create: true
+    state: present
+    regexp: '^%ansible'
+    line: '%ansible ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: Make sure .ssh directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansible_ssh_directory }}"
+    state: directory
+
+- name: Deploy keyfiles for ansible account
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ ansible_ssh_directory }}"
+    decrypt: yes
+    owner: ansible
+    group: ansible
+    mode: 400
+    backup: no
+  with_fileglob: "id_ed25519*"
+
+- name: Set up authorized keys for localhost ssh with ansible account
+  become: true
+  ansible.posix.authorized_key:
+    user: ansible
+    key: "{{ item }}"
+  with_file:
+    - "{{ ansible_ssh_directory }}/id_ed25519.pub"

@@ -1,0 +1,5 @@
+Add ansible user
+Add to sudoers
+Add to passwordless sudoers
+Copy in ssh keys
+Add key to authorized users
