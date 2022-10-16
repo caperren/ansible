@@ -1,11 +1,23 @@
+- name: Add ansible-host group
+  ansible.builtin.group:
+    name: ansible-host
+    state: present
+
 - name: Add ansible user account
   become: true
   ansible.builtin.user:
     name: ansible
     append: true
-    groups: sudo
+    groups: sudo, ansible-host
     createhome: true
     state: present
+
+- name: Add personal account to ansible-host group
+  become: true
+  ansible.builtin.user:
+    name: "{{ personal_account_username }}"
+    append: true
+    groups: ansible-host
 
 - name: Allow ansible account to have passwordless sudo
   become: true
@@ -22,6 +34,9 @@
   ansible.builtin.file:
     path: "{{ ansible_ssh_directory }}"
     state: directory
+    owner: ansible
+    group: ansible
+    mode: 0700
 
 - name: Deploy keyfiles for ansible account
   become: true
@@ -31,14 +46,18 @@
     decrypt: yes
     owner: ansible
     group: ansible
-    mode: 400
+    mode: 0600
     backup: no
   with_fileglob: "id_ed25519*"
+
+- name: Get contents of ansible ssh public key file
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ ansible_ssh_directory }}/id_ed25519.pub"
+  register: public_key
 
 - name: Set up authorized keys for localhost ssh with ansible account
   become: true
   ansible.posix.authorized_key:
     user: ansible
-    key: "{{ item }}"
-  with_file:
-    - "{{ ansible_ssh_directory }}/id_ed25519.pub"
+    key: "{{ public_key['content'] | b64decode }}"
