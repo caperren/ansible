@@ -86,7 +86,7 @@
     repo: "{{ ansible_git_repo }}"
     dest: "{{ ansible_repo_directory }}"
     version: "{{ ansible_repo_branch }}"
-    key_file: "/{{ ansible_env.SUDO_USER or ansible_user_id }}/.ssh/id_ed25519"
+    key_file: "/{{ ansible_user_id }}/.ssh/id_ed25519"
     accept_newhostkey: true
 
 - name: Create ansible virtual environment
