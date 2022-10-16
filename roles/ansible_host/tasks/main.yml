@@ -94,6 +94,8 @@
     depth: 1
 
 - name: Create ansible virtual environment
+  become: true
+  become_user: ansible
   ansible.builtin.pip:
     requirements: "{{ ansible_repo_directory }}/requirements.txt"
     virtualenv: "{{ ansible_venv_directory }}"
