@@ -1,6 +1,11 @@
-- name: Print all available facts
-  ansible.builtin.debug:
-    var: personal_account_password
+- name: Install and update ansible pre-requisites
+  ansible.builtin.apt:
+    - python3
+    - python3-pip
+    - virtualenv
+    - python3-setuptools
+  state: latest
+  update_cache: yes
 
 - name: Add ansible group
   become: true
