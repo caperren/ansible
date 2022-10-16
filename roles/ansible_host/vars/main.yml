@@ -1,7 +1,7 @@
 ansible_group: ansible-host
 ansible_ssh_directory: /home/ansible/.ssh
 
-ansible_git_repo: https://github.com/caperren/ansible.git
+ansible_git_repo: "https://github.com/caperren/ansible.git"
 ansible_repo_directory: /opt/ansible
 ansible_venv_directory: /opt/ansible/venv
 ansible_repo_branch: initial_ansible_setup
