@@ -1,4 +1,4 @@
-ansible-group: ansible-host
+ansible_group: ansible-host
 ansible_ssh_directory: /home/ansible/.ssh
 
 ansible_git_repo: git@github.com:caperren/ansible.git

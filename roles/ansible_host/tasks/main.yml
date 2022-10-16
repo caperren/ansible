@@ -1,7 +1,7 @@
 - name: Add ansible group
   become: true
   ansible.builtin.group:
-    name: "{{ ansible-group }}"
+    name: "{{ ansible_group }}"
     state: present
 
 - name: Add ansible user account
@@ -9,7 +9,7 @@
   ansible.builtin.user:
     name: ansible
     append: true
-    groups: "sudo, {{ ansible-group }}"
+    groups: "sudo, {{ ansible_group }}"
     createhome: true
     state: present
 
@@ -18,7 +18,7 @@
   ansible.builtin.user:
     name: "{{ personal_account_username }}"
     append: true
-    groups: "{{ ansible-group }}"
+    groups: "{{ ansible_group }}"
 
 - name: Allow ansible account to have passwordless sudo
   become: true
@@ -81,7 +81,7 @@
     path: "{{ ansible_repo_directory }}"
     state: present
     owner: ansible
-    group: "{{ ansible-group }}"
+    group: "{{ ansible_group }}"
     mode: 0770
 
 - name: Clone the ansible repo
