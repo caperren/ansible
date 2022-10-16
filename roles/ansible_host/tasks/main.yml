@@ -1,7 +1,7 @@
 - name: Add ansible-host group
   become: true
   ansible.builtin.group:
-    name: ansible-host
+    name: "{{ ansible-group }}"
     state: present
 
 - name: Add ansible user account
@@ -9,7 +9,7 @@
   ansible.builtin.user:
     name: ansible
     append: true
-    groups: sudo, ansible-host
+    groups: "sudo, {{ ansible-group }}"
     createhome: true
     state: present
 
@@ -18,12 +18,12 @@
   ansible.builtin.user:
     name: "{{ personal_account_username }}"
     append: true
-    groups: ansible-host
+    groups: "{{ ansible-group }}"
 
 - name: Allow ansible account to have passwordless sudo
   become: true
   ansible.builtin.lineinfile:
-    dest: /etc/sudoers.d/10-caperren-home-ansible
+    dest: "/etc/sudoers.d/10-ansible"
     create: true
     state: present
     regexp: '^%ansible'
@@ -62,3 +62,36 @@
   ansible.posix.authorized_key:
     user: ansible
     key: "{{ public_key['content'] | b64decode }}"
+
+- name: Delete the ansible repo directory if is exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansible_repo_directory }}"
+    state: absent
+
+- name: Delete the ansible repo directory if is exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansible_repo_directory }}"
+    state: absent
+
+- name: Create the ansible repo directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansible_repo_directory }}"
+    state: present
+    owner: ansible
+    group: "{{ ansible-group }}"
+    mode: 0770
+
+- name: Clone the ansible repo
+  ansible.builtin.git:
+    repo: "{{ ansible_git_repo }}"
+    dest: "{{ ansible_repo_directory }}"
+    version: "{{ initial_ansible_setup }}"
+
+- name: Create ansible virtual environment
+  ansible.builtin.pip:
+    requirements: "{{ ansible_repo_directory }}/requirements.txt"
+    virtualenv: "{{ ansible_venv_directory }}"
+    executable: pip3
