@@ -99,4 +99,4 @@
   ansible.builtin.pip:
     requirements: "{{ ansible_repo_directory }}/requirements.txt"
     virtualenv: "{{ ansible_venv_directory }}"
-    executable: pip3
+    virtualenv_python: python3
