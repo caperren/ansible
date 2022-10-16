@@ -1,11 +1,13 @@
 - name: Install and update ansible pre-requisites
+  become: true
   ansible.builtin.apt:
-    - python3
-    - python3-pip
-    - virtualenv
-    - python3-setuptools
-  state: latest
-  update_cache: yes
+    name:
+      - python3
+      - python3-pip
+      - virtualenv
+      - python3-setuptools
+    state: latest
+    update_cache: yes
 
 - name: Add ansible group
   become: true
