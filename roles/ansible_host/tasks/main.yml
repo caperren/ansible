@@ -91,7 +91,7 @@
   ansible.builtin.git:
     repo: "{{ ansible_git_repo }}"
     dest: "{{ ansible_repo_directory }}"
-    version: "{{ initial_ansible_setup }}"
+    version: "{{ ansible_repo_branch }}"
 
 - name: Create ansible virtual environment
   ansible.builtin.pip:
