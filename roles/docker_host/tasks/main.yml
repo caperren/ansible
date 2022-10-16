@@ -1,4 +1,5 @@
 - name: Install and update docker pre-requisites
+  become: true
   ansible.builtin.apt:
     name:
       - apt-transport-https
@@ -12,17 +13,20 @@
     update_cache: yes
 
 - name: Add docker gpg apt key
-  apt_key:
+  become: true
+  ansible.builtin.apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
 
 - name: Add docker repository
-  apt_repository:
+  become: true
+  ansible.builtin.apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu {{ ubuntu_version_codename }} stable
     state: present
 
 - name: Update apt and install docker community edition
-  apt:
+  become: true
+  ansible.builtin.apt:
     name: docker-ce
     state: latest
     update_cache: true
