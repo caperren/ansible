@@ -72,12 +72,6 @@
     path: "{{ ansible_repo_directory }}"
     state: absent
 
-- name: Delete the ansible repo directory if is exists
-  become: true
-  ansible.builtin.file:
-    path: "{{ ansible_repo_directory }}"
-    state: absent
-
 - name: Create the ansible repo directory
   become: true
   ansible.builtin.file:
@@ -92,6 +86,7 @@
     repo: "{{ ansible_git_repo }}"
     dest: "{{ ansible_repo_directory }}"
     version: "{{ ansible_repo_branch }}"
+    accept_newhostkey: true
 
 - name: Create ansible virtual environment
   ansible.builtin.pip:
