@@ -69,7 +69,7 @@
 - name: Add additions to ansible and personal account bashrc files
   become: true
   ansible.builtin.blockinfile:
-    block: "{{ lookup('ansible.builtin.file', 'bashrc_additions') }}"
+    block: "{{ lookup('ansible.builtin.template', 'bashrc_additions') }}"
     path: "/home/{{ item }}/.bashrc"
   loop:
     - "{{ ansible_username }}"
