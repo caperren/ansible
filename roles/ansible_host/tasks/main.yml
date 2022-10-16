@@ -82,6 +82,8 @@
     mode: 0770
 
 - name: Clone the ansible repo
+  become: true
+  become_user: ansible
   ansible.builtin.git:
     repo: "{{ ansible_git_repo }}"
     dest: "{{ ansible_repo_directory }}"
