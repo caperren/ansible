@@ -1,4 +1,4 @@
-- name: Add ansible-host group
+- name: Add ansible group
   become: true
   ansible.builtin.group:
     name: "{{ ansible-group }}"
@@ -13,7 +13,7 @@
     createhome: true
     state: present
 
-- name: Add personal account to ansible-host group
+- name: Add personal account to ansible group
   become: true
   ansible.builtin.user:
     name: "{{ personal_account_username }}"
