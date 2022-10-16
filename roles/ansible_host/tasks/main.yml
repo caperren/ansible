@@ -20,6 +20,9 @@
     append: true
     groups: "{{ ansible_group }}"
 
+- name: Reset ssh connection to allow account to get group changes
+  ansible.builtin.meta: reset_connection
+
 - name: Allow ansible account to have passwordless sudo
   become: true
   ansible.builtin.lineinfile:
@@ -79,7 +82,7 @@
   become: true
   ansible.builtin.file:
     path: "{{ ansible_repo_directory }}"
-    state: present
+    state: directory
     owner: ansible
     group: "{{ ansible_group }}"
     mode: 0770
