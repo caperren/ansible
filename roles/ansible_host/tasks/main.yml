@@ -1,4 +1,5 @@
 - name: Add ansible-host group
+  become: true
   ansible.builtin.group:
     name: ansible-host
     state: present
