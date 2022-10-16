@@ -7,7 +7,7 @@
 - name: Add ansible user account
   become: true
   ansible.builtin.user:
-    name: ansible
+    name: "{{ ansible_username }}"
     append: true
     groups: "sudo, {{ ansible_group }}"
     createhome: true
@@ -26,7 +26,7 @@
 - name: Allow ansible account to have passwordless sudo
   become: true
   ansible.builtin.lineinfile:
-    dest: "/etc/sudoers.d/10-ansible"
+    dest: "/etc/sudoers.d/10-{{ ansible_group }}"
     create: true
     state: present
     regexp: '^%ansible'
@@ -38,8 +38,8 @@
   ansible.builtin.file:
     path: "{{ ansible_ssh_directory }}"
     state: directory
-    owner: ansible
-    group: ansible
+    owner: "{{ ansible_username }}"
+    group: "{{ ansible_username }}"
     mode: 0700
 
 - name: Deploy keyfiles for ansible account
@@ -48,39 +48,32 @@
     src: "{{ item }}"
     dest: "{{ ansible_ssh_directory }}"
     decrypt: yes
-    owner: ansible
-    group: ansible
+    owner: "{{ ansible_username }}"
+    group: "{{ ansible_username }}"
     mode: 0600
     backup: no
-  with_fileglob: "id_ed25519*"
+  with_fileglob: "{{ ansible_keyfile_name }}*"
 
 - name: Get contents of ansible ssh public key file
   become: true
   ansible.builtin.slurp:
-    src: "{{ ansible_ssh_directory }}/id_ed25519.pub"
+    src: "{{ ansible_ssh_directory }}/{{ ansible_keyfile_name }}.pub"
   register: public_key
 
-- name: Set up authorized keys for localhost ssh with ansible account
+- name: Set up authorized keys for localhost ssh with ansible account keyfile
   become: true
   ansible.posix.authorized_key:
-    user: ansible
+    user: "{{ ansible_username }}"
     key: "{{ public_key['content'] | b64decode }}"
 
-# clone start Make the section from here to end all part of clone
-- name: Delete the ansible repo directory if is exists
+- name: Add additions to ansible and personal account bashrc files
   become: true
-  ansible.builtin.file:
-    path: "{{ ansible_repo_directory }}"
-    state: absent
-
-- name: Create the ansible repo directory
-  become: true
-  ansible.builtin.file:
-    path: "{{ ansible_repo_directory }}"
-    state: directory
-    owner: ansible
-    group: "{{ ansible_group }}"
-    mode: 0770
+  ansible.builtin.blockinfile:
+    block: "{{ lookup('ansible.builtin.file', 'bashrc_additions') }}"
+    path: "/home/{{ item }}/.bashrc"
+  loop:
+    - "{{ ansible_username }}"
+    - "{{ personal_account_username }}"
 
 - name: Clone the ansible repo
   become: true
@@ -89,11 +82,21 @@
     repo: "{{ ansible_git_repo }}"
     dest: "{{ ansible_repo_directory }}"
     version: "{{ ansible_repo_branch }}"
-    key_file: "/{{ ansible_user_id }}/.ssh/id_ed25519"
+    key_file: "/{{ ansible_username }}/.ssh/{{ ansible_keyfile_name }}"
     accept_newhostkey: true
     clone: true
-    depth: 1
-# clone end
+    update: true
+    force: true
+
+- name: Update repo directory permissions
+  become: true
+  become_user: ansible
+  ansible.builtin.file:
+    path: "{{ ansible_repo_directory }}"
+    owner: "{{ ansible_username }}"
+    group: "{{ ansible_group }}"
+    recurse: true
+    mode: 0770
 
 - name: Create ansible virtual environment
   become: true
@@ -102,3 +105,4 @@
     requirements: "{{ ansible_repo_directory }}/requirements.txt"
     virtualenv: "{{ ansible_venv_directory }}"
     virtualenv_python: python3
+
