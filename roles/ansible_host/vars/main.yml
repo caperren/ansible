@@ -6,5 +6,5 @@ ansible_keyfile_name: id_ed25519
 
 ansible_git_repo: "https://github.com/caperren/ansible.git"
 ansible_repo_directory: /opt/ansible
-ansible_venv_directory: /opt/ansible_venv
+ansible_venv_directory: "{{ ansible_repo_directory}}/venv"
 ansible_repo_branch: initial_ansible_setup

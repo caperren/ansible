@@ -75,6 +75,16 @@
     - "{{ ansible_username }}"
     - "{{ personal_account_username }}"
 
+- name: Create repo directory and update permissions
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ ansible_repo_directory }}"
+    owner: "{{ ansible_username }}"
+    group: "{{ ansible_group }}"
+    recurse: true
+    mode: 0770
+
 - name: Clone the ansible repo
   become: true
   become_user: ansible
@@ -88,20 +98,11 @@
     update: true
     force: true
 
-- name: Update repo directory permissions
-  become: true
-  become_user: ansible
-  ansible.builtin.file:
-    path: "{{ ansible_repo_directory }}"
-    owner: "{{ ansible_username }}"
-    group: "{{ ansible_group }}"
-    recurse: true
-    mode: 0770
-
-- name: Create ansible virtual environment
+- name: Create or update ansible virtual environment
   become: true
   become_user: ansible
   ansible.builtin.pip:
+    state: latest
     requirements: "{{ ansible_repo_directory }}/requirements.txt"
     virtualenv: "{{ ansible_venv_directory }}"
     virtualenv_python: python3
