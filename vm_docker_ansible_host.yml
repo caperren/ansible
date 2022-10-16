@@ -1,0 +1,4 @@
+- name: Deploy ansible hosts
+  hosts: ansible_hosts
+  roles:
+    - ansible_host
