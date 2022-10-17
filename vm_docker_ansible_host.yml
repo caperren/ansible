@@ -1,5 +1,0 @@
-- name: Deploy ansible and docker on hosts
-  hosts: ansible_hosts
-  roles:
-    - ansible_host
-    - docker_host

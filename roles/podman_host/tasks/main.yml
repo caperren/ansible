@@ -1,0 +1,9 @@
+- name: Install and update podman and extra utils
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+      - podman
+    state: latest
+    update_cache: yes

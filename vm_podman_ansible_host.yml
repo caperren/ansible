@@ -1,0 +1,5 @@
+- name: Deploy ansible and podman on hosts
+  hosts: ansible_hosts
+  roles:
+    - ansible_host
+    - podman_host
