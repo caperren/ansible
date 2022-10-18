@@ -3,7 +3,7 @@
 # cockpit-selinux, cockpit-storaged and cockpit-system.
 # I really like cockpit for setting up storage and running
 # virtual machines and podman containers.
-- name: Install and update ubuntu os and packages
+- name: Install and update cockpit packages
   become: true
   ansible.builtin.apt:
     name:
