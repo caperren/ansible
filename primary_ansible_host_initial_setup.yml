@@ -1,0 +1,9 @@
+# This is intended to be run from my personal account (either on the endpoint, or a separate host)
+# Process would be:
+# - Install host os, add personal account as part of setup
+# - Run this to set up personal account and get ansible account and repo ready to run against homelab
+# - Log in to ansible account for all future ansible runs (or use web ui)
+- name: Perform first time setup of ansible host
+  hosts: primary_ansible_host_initial_setup
+  roles:
+    - ansible_host

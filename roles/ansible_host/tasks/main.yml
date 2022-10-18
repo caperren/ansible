@@ -44,7 +44,7 @@
     line: '%ansible ALL=(ALL) NOPASSWD: ALL'
     validate: 'visudo -cf %s'
 
-- name: Make sure .ssh directory exists
+- name: Make sure ansible .ssh directory exists
   become: true
   ansible.builtin.file:
     path: "{{ ansible_ssh_directory }}"

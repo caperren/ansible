@@ -1,0 +1,9 @@
+- name: Deploy ansible host
+  hosts: ansible_hosts
+  roles:
+    - ansible_host
+
+- name: Deploy podman
+  hosts: podman_hosts
+  roles:
+    - podman_host

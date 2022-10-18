@@ -1,0 +1,40 @@
+- name: Make sure personal .ssh directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ personal_ssh_directory }}"
+    state: directory
+    owner: "{{ personal_account_username }}"
+    group: "{{ personal_account_username }}"
+    mode: 0700
+
+- name: Deploy keyfiles for personal account
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ personal_ssh_directory }}"
+    decrypt: yes
+    owner: "{{ personal_account_username }}"
+    group: "{{ personal_account_username }}"
+    mode: 0600
+    backup: no
+  with_fileglob: "{{ personal_keyfile_name }}*"
+
+- name: Get contents of personal ssh public key file
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ personal_ssh_directory }}/{{ personal_keyfile_name }}.pub"
+  register: public_key
+
+- name: Set up authorized keys for localhost ssh with personal account keyfile
+  become: true
+  ansible.posix.authorized_key:
+    user: "{{ personal_account_username }}"
+    key: "{{ public_key['content'] | b64decode }}"
+
+- name: Add additions to ansible and personal account bashrc files
+  become: true
+  ansible.builtin.blockinfile:
+    block: "{{ lookup('ansible.builtin.template', 'bashrc_additions') }}"
+    path: "/home/{{ item }}/.bashrc"
+  loop:
+    - "{{ personal_account_username }}"
