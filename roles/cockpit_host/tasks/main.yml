@@ -12,7 +12,7 @@
       - cockpit-machines
       - cockpit-dashboard
       - cockpit-storaged
-      - cockpit-system
-      - cockpit-selinux
+      - cockpit-networkmanager
+      - cockpit-pcp
     state: latest
     update_cache: yes
