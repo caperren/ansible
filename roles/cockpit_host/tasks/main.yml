@@ -4,6 +4,7 @@
 # I really like cockpit for setting up storage and running
 # virtual machines and podman containers.
 - name: Install and update ubuntu os and packages
+  become: true
   ansible.builtin.apt:
     name:
       - cockpit
