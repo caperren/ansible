@@ -1,9 +1,20 @@
-- name: Deploy ansible host
+- name: Setup ubuntu 22.04 hosts
+  hosts: ubuntu_22_04_hosts
+  roles:
+    - personal_account_setup
+    - ubuntu_22_04_hosts
+
+- name: Deploy ansible hosts
   hosts: ansible_hosts
   roles:
     - ansible_host
 
-- name: Deploy podman
+- name: Deploy podman hosts
   hosts: podman_hosts
   roles:
     - podman_host
+
+- name: Deploy cockpit hosts
+  hosts: cockpit_hosts
+  roles:
+    - cockpit_host
