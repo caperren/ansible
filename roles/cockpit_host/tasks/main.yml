@@ -10,7 +10,8 @@
       - cockpit
       - cockpit-podman
       - cockpit-machines
-      - cockpit-dashboard
+#      - cockpit-dashboard
+#      - cockpit-system
       - cockpit-storaged
       - cockpit-networkmanager
       - cockpit-pcp
