@@ -1,1 +1,3 @@
+personal_account_username: caperren
+personal_account_password: "{{ vault_personal_account_password }}"
 github_access_token: "{{ vault_github_access_token }}"

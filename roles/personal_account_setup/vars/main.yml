@@ -1,5 +1,2 @@
-personal_account_username: caperren
-personal_account_password: "{{ vault_personal_account_password }}"
-
 personal_ssh_directory: "/home/{{ personal_account_username }}/.ssh"
 personal_keyfile_name: id_ed25519
