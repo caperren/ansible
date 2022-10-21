@@ -1,0 +1,11 @@
+podman run -d \
+  --name home_assistant \
+  --privileged \
+  --restart=unless-stopped \
+  -e TZ="America/Los Angeles" \
+  -v /srv/podman/home_assistant/config:/config \
+  -v /etc/localtime:/etc/localtime:ro \
+  --network=host \
+  docker.io/homeassistant/home-assistant:latest
+
+podman rm -f $(podman ps -a -f "status=exited" -q)
