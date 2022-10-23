@@ -12,9 +12,14 @@
 - name: Install caddyfile on hosts
 - hosts: caddyfile_hosts
   tags: caddyfile
-  roles:
-    - role: caddy_ansible
+  tasks:
+    - include_role:
+      name: caddy_ansible
       caddy_config: "{{ lookup('template', 'Caddyfile.j2') }}"
+
+#  roles:
+#    - role: caddy_ansible
+
 
 - name: Deploy podman hosts
   hosts: podman_hosts
