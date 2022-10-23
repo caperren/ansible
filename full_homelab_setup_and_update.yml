@@ -10,7 +10,7 @@
     - ansible_host
 
 - name: Install caddyfile on hosts
-- hosts: caddyfile_hosts
+  hosts: caddyfile_hosts
   tags: caddyfile
   tasks:
     - include_role:
