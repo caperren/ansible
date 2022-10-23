@@ -14,7 +14,7 @@
   hosts: caddyfile_hosts
   tags: caddyfile
   roles:
-    - caddy_ansible.caddy_ansible
+    - galaxy.caddy_ansible.caddy_ansible
 #  tasks:
 #    - include_role:
 #        name: caddy_ansible
