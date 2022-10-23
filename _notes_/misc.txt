@@ -4,3 +4,4 @@ Add to passwordless sudoers
 Copy in ssh keys
 Add key to authorized users
 Install acl from apt
+Add users to dialout for serial usage

@@ -1,11 +1,23 @@
-podman run -d \
+sudo podman run -d \
   --name home_assistant \
   --privileged \
   --restart=unless-stopped \
   -e TZ="America/Los Angeles" \
   -v /srv/podman/home_assistant/config:/config \
   -v /etc/localtime:/etc/localtime:ro \
+  -v /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_51600DEB-if01-port0:/dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_51600DEB-if01-port0 \
   --network=host \
   docker.io/homeassistant/home-assistant:latest
 
+
+sudo podman run -p 8091:8091 -p 3000:3000 \
+    -d \
+  --name zwavejs2mqtt \
+  --privileged \
+  --restart=unless-stopped \
+  -e TZ="America/Los Angeles" \-v /srv/podman/zwavejs2mqtt/store:/usr/src/app/store:Z \
+    -v /dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_51600DEB-if00-port0:/dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_51600DEB-if00-port0 \
+    docker.io/zwavejs/zwavejs2mqtt:latest
+
+    --security-opt label=disable --group-add keep-groups --device=/dev/serial/by-id/usb-XXXX:/dev/serial/by-id/usb-XXXX zwavejs/zwavejs2mqtt:latest
 podman rm -f $(podman ps -a -f "status=exited" -q)
