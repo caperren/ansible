@@ -14,7 +14,7 @@
   hosts: caddyfile_hosts
   tags: caddyfile
   roles:
-    - role: caddy-ansible.caddy-ansible
+    - role: caddy-ansible
       caddy_config: "{{ lookup('template', 'Caddyfile.j2') }}"
 
 - name: Deploy podman hosts
