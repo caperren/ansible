@@ -14,16 +14,8 @@
   hosts: caddyfile_hosts
   tags: caddyfile
   roles:
-    - galaxy.caddy_ansible.caddy_ansible
-#  tasks:
-#    - include_role:
-#        name: caddy_ansible
-#      vars:
-#        caddy_config: "{{ lookup('template', 'Caddyfile.j2') }}"
-
-#  roles:
-#    - role: caddy_ansible
-
+    - role: caddy-ansible.caddy-ansible
+      caddy_config: "{{ lookup('template', 'Caddyfile.j2') }}"
 
 - name: Deploy podman hosts
   hosts: podman_hosts
