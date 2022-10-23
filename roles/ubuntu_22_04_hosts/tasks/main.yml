@@ -4,6 +4,13 @@
     upgrade: dist
     update_cache: yes
 
+- name: Install extra packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - libnss3-tools
+    state: latest
+
 - name: Check if reboot required after update
   become: true
   ansible.builtin.stat:
