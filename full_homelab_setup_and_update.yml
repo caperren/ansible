@@ -15,7 +15,8 @@
   tasks:
     - include_role:
       name: caddy_ansible
-      caddy_config: "{{ lookup('template', 'Caddyfile.j2') }}"
+      vars:
+        caddy_config: "{{ lookup('template', 'Caddyfile.j2') }}"
 
 #  roles:
 #    - role: caddy_ansible
