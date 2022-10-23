@@ -10,13 +10,16 @@
     - ansible_host
 
 - name: Install caddyfile on hosts
+  become: true
   hosts: caddyfile_hosts
   tags: caddyfile
-  tasks:
-    - include_role:
-        name: caddy_ansible
-      vars:
-        caddy_config: "{{ lookup('template', 'Caddyfile.j2') }}"
+  roles:
+    - caddy_ansible.caddy_ansible
+#  tasks:
+#    - include_role:
+#        name: caddy_ansible
+#      vars:
+#        caddy_config: "{{ lookup('template', 'Caddyfile.j2') }}"
 
 #  roles:
 #    - role: caddy_ansible
