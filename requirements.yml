@@ -1,0 +1,2 @@
+- name: caddy-ansible
+  src: https://github.com/caddy-ansible/caddy-ansible.git
