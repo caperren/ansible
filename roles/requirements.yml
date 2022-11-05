@@ -1,2 +1,7 @@
 - name: caddy-ansible
   src: https://github.com/caddy-ansible/caddy-ansible.git
+  path: galaxy.roles/
+
+- name: containers.podman
+  src: containers.podman
+  path: galaxy.roles/
