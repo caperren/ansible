@@ -1,0 +1,5 @@
+- name: Setup ansible_sempaphore
+  hosts: ubuntu_22_04_hosts
+  roles:
+    - personal_account_setup
+    - ubuntu_hosts

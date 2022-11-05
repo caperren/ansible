@@ -1,8 +1,11 @@
-- name: Setup ubuntu 22.04 hosts
-  hosts: ubuntu_22_04_hosts
+
+
+- name: Setup Ubuntu Hosts
+  hosts:
+    - ubuntu_22_04_hosts
   roles:
     - personal_account_setup
-    - ubuntu_22_04_hosts
+    - ubuntu_hosts
 
 - name: Deploy ansible hosts
   hosts: ansible_hosts
@@ -28,3 +31,5 @@
   hosts: cockpit_hosts
   roles:
     - cockpit_host
+
+- name: Deploy
